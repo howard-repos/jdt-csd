@@ -1,0 +1,68 @@
+{
+  "name": "KAFKA_MANAGER",
+  "label": "kafka manager",
+  "description": "由贾大神提供的kafka manager",
+  "version": "1.2.7-1.0.0",
+  "runAs": {
+    "user": "kafka-manager",
+    "group": "kafka-manager"
+  },
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "kafka-manager"
+    ]
+  },
+  "serviceDependencies": [
+    {
+      "name": "ZOOKEEPER",
+      "required": "true"
+    }
+  ],
+  "rolesWithExternalLinks": [
+    "KAFKA_MANAGER"
+  ],
+  "roles": [
+    {
+      "name": "KAFKA_MANAGER",
+      "label": "kafka manager",
+      "pluralLabel": "kafka manager",
+      "jvmBased": true,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [
+          "start"
+        ],
+        "environmentVariables": {
+          "port": "${port}"
+        }
+      },
+      "externalLink": {
+        "name": "kafka_manager",
+        "label": "kafka manager",
+        "url": "http://${host}:${port}"
+      },
+      "topology": {
+        "minInstances": "1",
+        "maxInstances": "1"
+      },
+      "logging": {
+        "dir": "/var/log/kafkaManager",
+        "filename": "kafkaManager.log",
+        "modifiable": true,
+        "configName": "log.dir",
+        "loggingType": "logback"
+      },
+      "parameters": [
+        {
+          "name": "port",
+          "label": "端口",
+          "description": "端口",
+          "type": "port",
+          "default": 7000,
+          "required": true
+        }
+      ]
+    }
+  ]
+}
