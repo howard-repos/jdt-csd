@@ -2,7 +2,7 @@
   "name": "CI_META",
   "label": "jdt ci meta",
   "description": "由贾大神提供的mongodb副本集,用于存放ci元数据",
-  "version": "3.0.15-1.0.0",
+  "version": "3.0.15-1.0.2",
   "runAs": {
     "user": "mongodb",
     "group": "mongodb"
@@ -13,6 +13,34 @@
       "mongodb"
     ]
   },
+  "serviceInit": {
+    "postStartSteps": [
+      {
+        "commandName": "initiateReplicaSet"
+      },
+      {
+        "commandName": "showReplicaSetStatus"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "initiateReplicaSet",
+      "label": "初始化副本集",
+      "description": "初始化副本集",
+      "roleName": "MONGODB_SERVER",
+      "roleCommand": "initiateReplicaSet",
+      "runMode": "single"
+    },
+    {
+      "name": "showReplicaSetStatus",
+      "label": "显示副本集状态",
+      "description": "显示副本集状态",
+      "roleName": "MONGODB_SERVER",
+      "roleCommand": "showReplicaSetStatus",
+      "runMode": "single"
+    }
+  ],
   "roles": [
     {
       "name": "MONGODB_SERVER",
@@ -36,7 +64,7 @@
           {
             "filename": "peer.properties",
             "params": [
-              "cacheSizeGB"
+              "port"
             ]
           }
         ]
@@ -79,8 +107,34 @@
           "label": "port",
           "description": "port",
           "type": "long",
-          "default": 27018,
+          "default": 27017,
           "required": true
+        }
+      ],
+      "commands": [
+        {
+          "name": "initiateReplicaSet",
+          "label": "初始化副本集",
+          "description": "初始化副本集",
+          "expectedExitCodes": [
+            0
+          ],
+          "requiredRoleState": "running",
+          "commandRunner": {
+            "program": "scripts/init.py"
+          }
+        },
+        {
+          "name": "showReplicaSetStatus",
+          "label": "显示副本集状态",
+          "description": "显示副本集状态",
+          "expectedExitCodes": [
+            0
+          ],
+          "requiredRoleState": "running",
+          "commandRunner": {
+            "program": "scripts/show.py"
+          }
         }
       ]
     }

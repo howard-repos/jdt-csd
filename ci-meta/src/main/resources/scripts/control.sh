@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cat <<EOF >> meta.conf
+
+cat <<EOF > meta.conf
 net:
     port: ${port}
 systemLog:
@@ -13,6 +14,8 @@ storage:
     wiredTiger:
         engineConfig:
             cacheSizeGB: ${cacheSizeGB}
+replication:
+    replSetName: "meta"
 EOF
 
 CMD=$1

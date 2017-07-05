@@ -1,6 +1,6 @@
 {
   "name": "STORM",
-  "label": " jdt storm",
+  "label": "jdt storm",
   "description": "由贾大神提供的的storm",
   "version": "0.9.4-1.0.2",
   "runAs": {
