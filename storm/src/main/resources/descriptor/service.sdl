@@ -189,7 +189,7 @@
   ],
   "gateway": {
     "alternatives": {
-      "name": "storm",
+      "name": "storm-conf",
       "priority": 50,
       "linkRoot": "/etc/storm"
     },
@@ -199,7 +199,7 @@
     "configWriter": {
       "peerConfigGenerators": [
         {
-          "filename": "storm/nimbus.properties",
+          "filename": "storm-conf/nimbus.properties",
           "params": [
             "storm_log_dir"
           ],
