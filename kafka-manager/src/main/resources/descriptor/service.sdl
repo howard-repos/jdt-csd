@@ -1,6 +1,6 @@
 {
   "name": "KAFKA_MANAGER",
-  "label": "kafka manager",
+  "label": "jdt kafka manager",
   "description": "由贾大神提供的kafka manager",
   "version": "1.2.7-1.0.0",
   "runAs": {

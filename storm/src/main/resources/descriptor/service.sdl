@@ -1,0 +1,211 @@
+{
+  "name": "STORM",
+  "label": " jdt storm",
+  "description": "由贾大神提供的的storm",
+  "version": "0.9.4-1.0.2",
+  "runAs": {
+    "user": "storm",
+    "group": "storm"
+  },
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "storm"
+    ]
+  },
+  "serviceDependencies": [
+    {
+      "name": "ZOOKEEPER",
+      "required": "true"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "topology_max_spout_pending",
+      "label": "topology.max.spout.pending",
+      "description": "topology.max.spout.pending",
+      "type": "long",
+      "default": 10,
+      "min": 1,
+      "max": 50
+    }
+  ],
+  "roles": [
+    {
+      "name": "STORM_SUPERVISOR",
+      "label": "storm supervisor",
+      "pluralLabel": "storm supervisors",
+      "jvmBased": true,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [
+          "supervisor"
+        ],
+        "environmentVariables": {
+          "LOG_DIR": "${storm_log_dir}"
+        }
+      },
+      "configWriter": {
+        "peerConfigGenerators": [
+          {
+            "filename": "nimbus.properties",
+            "params": [
+              "storm_log_dir"
+            ],
+            "roleName": "STORM_NIMBUS"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "storm_log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/storm",
+          "pathType": "localDataDir",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "STORM_LOGVIEWER",
+      "label": "storm log viewer",
+      "pluralLabel": "storm viewers",
+      "jvmBased": true,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [
+          "logviewer"
+        ],
+        "environmentVariables": {
+          "LOG_DIR": "${storm_log_dir}"
+        }
+      },
+      "parameters": [
+        {
+          "name": "storm_log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/storm",
+          "pathType": "localDataDir",
+          "required": true
+        }
+      ],
+      "topology": {
+        "placementRules": [
+          {
+            "type": "alwaysWith",
+            "roleType": "STORM_SUPERVISOR"
+          }
+        ]
+      }
+    },
+    {
+      "name": "STORM_UI",
+      "label": "storm ui",
+      "pluralLabel": "storm ui",
+      "jvmBased": true,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [
+          "ui"
+        ],
+        "environmentVariables": {
+          "UI_PORT": "${ui_port}",
+          "LOG_DIR": "${storm_log_dir}"
+        }
+      },
+      "externalLink": {
+        "name": "storm_ui",
+        "label": "storm Web ui",
+        "url": "http://${host}:${ui_port}"
+      },
+      "topology": {
+        "minInstances": "1",
+        "maxInstances": "1"
+      },
+      "parameters": [
+        {
+          "name": "ui_port",
+          "label": "ui.port",
+          "description": "ui.port",
+          "type": "port",
+          "default": 9999
+        },
+        {
+          "name": "storm_log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/storm",
+          "pathType": "localDataDir",
+          "required": true
+        }
+      ],
+      "configWriter": {
+        "peerConfigGenerators": [
+          {
+            "filename": "nimbus.properties",
+            "params": [
+              "storm_log_dir"
+            ],
+            "roleName": "STORM_NIMBUS"
+          }
+        ]
+      }
+    },
+    {
+      "name": "STORM_NIMBUS",
+      "label": "storm nimbus",
+      "pluralLabel": "storm nimbus",
+      "jvmBased": true,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [
+          "nimbus"
+        ],
+        "environmentVariables": {
+          "LOG_DIR": "${storm_log_dir}"
+        }
+      },
+      "topology": {
+        "minInstances": "1",
+        "maxInstances": "1"
+      },
+      "parameters": [
+        {
+          "name": "storm_log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/storm",
+          "pathType": "localDataDir",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "gateway": {
+    "alternatives": {
+      "name": "storm",
+      "priority": 50,
+      "linkRoot": "/etc/storm"
+    },
+    "scriptRunner": {
+      "program": "scripts/gateway.sh"
+    },
+    "configWriter": {
+      "peerConfigGenerators": [
+        {
+          "filename": "storm/nimbus.properties",
+          "params": [
+            "storm_log_dir"
+          ],
+          "roleName": "STORM_NIMBUS"
+        }
+      ]
+    }
+  }
+}

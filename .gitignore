@@ -1,4 +1,4 @@
-kafka-manager/.settings/
-kafka-manager/target/
-kafka-manager/.classpath
-kafka-manager/.project
+*/.settings/
+*/target/
+*/.classpath
+*/.project

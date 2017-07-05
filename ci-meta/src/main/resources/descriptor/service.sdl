@@ -1,0 +1,88 @@
+{
+  "name": "CI_META",
+  "label": "jdt ci meta",
+  "description": "由贾大神提供的mongodb副本集,用于存放ci元数据",
+  "version": "3.0.15-1.0.0",
+  "runAs": {
+    "user": "mongodb",
+    "group": "mongodb"
+  },
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "mongodb"
+    ]
+  },
+  "roles": [
+    {
+      "name": "MONGODB_SERVER",
+      "label": "mongodb server",
+      "pluralLabel": "mongodb server",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [
+          "start"
+        ],
+        "environmentVariables": {
+          "data_dir": "${data_dir}",
+          "log_dir": "${log_dir}",
+          "cacheSizeGB": "${cacheSizeGB}",
+          "port": "${port}"
+        }
+      },
+      "configWriter": {
+        "peerConfigGenerators": [
+          {
+            "filename": "peer.properties",
+            "params": [
+              "cacheSizeGB"
+            ]
+          }
+        ]
+      },
+      "topology": {
+        "minInstances": "3",
+        "maxInstances": "3"
+      },
+      "parameters": [
+        {
+          "name": "data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/meta",
+          "pathType": "localDataDir",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/ciMeta",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "cacheSizeGB",
+          "label": "wiredTiger cacheSizeGB",
+          "description": "wiredTiger cacheSizeGB",
+          "type": "long",
+          "default": 1,
+          "unit": "gigabytes",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "long",
+          "default": 27018,
+          "required": true
+        }
+      ]
+    }
+  ]
+}
