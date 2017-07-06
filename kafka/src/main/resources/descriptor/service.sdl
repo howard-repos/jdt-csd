@@ -1,0 +1,109 @@
+{
+  "name": "JDT_KAFKA",
+  "label": "jdt kafka",
+  "description": "由贾大神提供的kafka",
+  "version": "1.2.7-1.0.0",
+  "runAs": {
+    "user": "kafka",
+    "group": "kafka"
+  },
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "jdt-kafka"
+    ]
+  },
+  "serviceDependencies": [
+    {
+      "name": "ZOOKEEPER",
+      "required": "true"
+    }
+  ],
+  "roles": [
+    {
+      "name": "KAFKA_BROKER",
+      "label": "kafka broker",
+      "pluralLabel": "kafka brokers",
+      "jvmBased": true,
+      "uniqueIdParameters": [
+        "broker.id"
+      ],
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": [
+          "start"
+        ],
+        "environmentVariables": {
+          "zookeeperRoot": "${zookeeper.chroot}",
+          "heap": "${heap}"
+        }
+      },
+      "logging": {
+        "dir": "/var/log/kafka",
+        "filename": "server.log",
+        "modifiable": true,
+        "configName": "log_dir",
+        "loggingType": "log4j"
+      },
+      "parameters": [
+        {
+          "name": "broker.id",
+          "label": "Broker ID",
+          "description": "ID uniquely identifying each broker. Never set this property at the group level; it should always be overridden on instance level.",
+          "type": "string"
+        },
+        {
+          "name": "port",
+          "label": "端口",
+          "description": "端口",
+          "type": "port",
+          "default": 9092,
+          "required": true
+        },
+        {
+          "name": "log.dirs",
+          "label": "Data Directories",
+          "description": "A list of one or more directories in which Kafka data is stored. Each new partition created is placed in the directory that currently has the fewest partitions. Each directory should be on its own separate drive.",
+          "type": "path_array",
+          "default": [
+            "/var/lib/kafka"
+          ],
+          "pathType": "localDataDir",
+          "required": "true",
+          "minLength": 1,
+          "configurableInWizard": true
+        },
+        {
+          "name": "zookeeper.chroot",
+          "label": "ZooKeeper Root",
+          "description": "zookeeper中的根目录",
+          "type": "string",
+          "default": "/kafka",
+          "required": true
+        },
+        {
+          "name": "heap",
+          "label": "jvm heap",
+          "description": "虚拟机堆内存大小",
+          "type": "long",
+          "default": 1,
+          "unit": "gigabytes",
+          "required": true
+        }
+      ],
+      "configWriter": {
+        "generators": [
+          {
+            "filename": "kafkaConfig.properties",
+            "configFormat": "properties",
+            "excludedParams": [
+              "zookeeper.chroot",
+              "heap",
+              "log_dir"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
