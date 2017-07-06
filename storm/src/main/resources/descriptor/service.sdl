@@ -30,6 +30,9 @@
       "max": 50
     }
   ],
+  "rolesWithExternalLinks": [
+    "STORM_UI"
+  ],
   "roles": [
     {
       "name": "STORM_SUPERVISOR",
