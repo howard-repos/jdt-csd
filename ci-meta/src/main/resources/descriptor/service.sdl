@@ -106,7 +106,7 @@
           "name": "port",
           "label": "port",
           "description": "port",
-          "type": "long",
+          "type": "port",
           "default": 27017,
           "required": true
         }
