@@ -35,7 +35,8 @@
         ],
         "environmentVariables": {
           "zookeeperRoot": "${zookeeper.chroot}",
-          "heap": "${heap}"
+          "heap": "${heap}",
+          "jmx_port": "${jmx_port}"
         }
       },
       "logging": {
@@ -58,6 +59,14 @@
           "description": "端口",
           "type": "port",
           "default": 9092,
+          "required": true
+        },
+        {
+          "name": "jmx_port",
+          "label": "JMX端口",
+          "description": "JMX端口",
+          "type": "port",
+          "default": 9093,
           "required": true
         },
         {
@@ -99,7 +108,8 @@
             "excludedParams": [
               "zookeeper.chroot",
               "heap",
-              "log_dir"
+              "log_dir",
+              "jmx_port"
             ]
           }
         ]

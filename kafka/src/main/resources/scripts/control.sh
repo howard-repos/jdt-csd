@@ -23,6 +23,7 @@ echo "zookeeper.connect=${ZK_QUORUM}${zookeeperRoot}" >> server.properties
 
 export KAFKA_LOG4J_OPTS="-Dlog4j.configuration=file:$CONF_DIR/log4j.properties"
 export KAFKA_HEAP_OPTS="-Xmx${heap}G -Xms${heap}G"
+export JMX_PORT=${jmx_port}
 
 CMD=$1
 case $CMD in
