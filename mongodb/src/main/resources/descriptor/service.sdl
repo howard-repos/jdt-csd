@@ -1,0 +1,208 @@
+{
+  "name": "MONGODB",
+  "label": "jdt mongodb",
+  "description": "由贾大神提供的mongodb集群",
+  "version": "3.0.15-1.0.0",
+  "runAs": {
+    "user": "mongodb",
+    "group": "mongodb"
+  },
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "mongodb"
+    ]
+  },
+  "serviceInit": {
+    "postStartSteps": [
+      {
+        "commandName": "initiateReplicaSet"
+      },
+      {
+        "commandName": "showReplicaSetStatus"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "initiateReplicaSet",
+      "label": "初始化副本集",
+      "description": "初始化副本集",
+      "roleName": "MONGODB_SERVER",
+      "roleCommand": "initiateReplicaSet",
+      "runMode": "single"
+    },
+    {
+      "name": "showReplicaSetStatus",
+      "label": "显示副本集状态",
+      "description": "显示副本集状态",
+      "roleName": "MONGODB_SERVER",
+      "roleCommand": "showReplicaSetStatus",
+      "runMode": "single"
+    }
+  ],
+  "roles": [
+    {
+      "name": "CONFIG_SERVER",
+      "label": "config server",
+      "pluralLabel": "config server",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/configServer.sh",
+        "environmentVariables": {
+          "data_dir": "${data_dir}",
+          "log_dir": "${log_dir}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "3",
+        "maxInstances": "3"
+      },
+      "parameters": [
+        {
+          "name": "data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/config",
+          "pathType": "localDataDir",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 30001,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "MONGODB_SERVER",
+      "label": "mongodb server",
+      "pluralLabel": "mongodb server",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/mongod.sh",
+        "environmentVariables": {
+          "data_dir": "${data_dir}",
+          "log_dir": "${log_dir}",
+          "cacheSizeGB": "${cacheSizeGB}",
+          "replSetName": "${replSetName}",
+          "port": "${port}"
+        }
+      },
+      "parameters": [
+        {
+          "name": "replSetName",
+          "label": "replSetName",
+          "description": "副本集名称",
+          "type": "string",
+          "default": "rs1",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/meta",
+          "pathType": "localDataDir",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "cacheSizeGB",
+          "label": "wiredTiger cacheSizeGB",
+          "description": "wiredTiger cacheSizeGB,如果不设置则由mongodb自动计算",
+          "type": "long",
+          "unit": "gigabytes",
+          "required": false
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31001,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "MONGODB_ARBITER",
+      "label": "仲裁者",
+      "pluralLabel": "仲裁者",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/arbiter.sh",
+        "environmentVariables": {
+          "data_dir": "${data_dir}",
+          "log_dir": "${log_dir}",
+          "replSetName": "${replSetName}",
+          "port": "${port}"
+        }
+      },
+      "parameters": [
+        {
+          "name": "replSetName",
+          "label": "replSetName",
+          "description": "副本集名称",
+          "type": "string",
+          "default": "rs1",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/meta",
+          "pathType": "localDataDir",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31002,
+          "required": true
+        }
+      ]
+    }
+  ]
+}
