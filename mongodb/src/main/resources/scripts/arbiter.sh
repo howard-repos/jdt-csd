@@ -1,25 +1,22 @@
 #!/bin/bash
 
 
-cat <<EOF > config.conf
-sharding:
-   clusterRole: "configsvr"
-storage:
-   dbPath: "${data_dir}"
+cat <<EOF > arbiter.conf
+replication:
+    replSetName: "${replSetName}"
 net:
-   port: ${port}
+    port: ${port}
 systemLog:
     destination: file
-    path: "${log_dir}/config.log"
+    path: "${log_dir}/arbiter.log"
     logAppend: true
+storage:
+    dbPath: "${data_dir}"
+    engine: "wiredTiger"
+    wiredTiger:
+        engineConfig:
+            directoryForIndexes: true
 EOF
 
-CMD=$1
-case $CMD in
-  (config)
-    exec numactl --interleave=all $MONGODB_DIRNAME/bin/mongod -f config.conf
-    ;;
-  (*)
-    echo "Don't understand [$CMD]"
-    ;;
-esac
+
+exec numactl --interleave=all $MONGODB_DIRNAME/bin/mongod -f arbiter.conf

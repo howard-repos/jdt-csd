@@ -3,11 +3,11 @@
 
 cat <<EOF > config.conf
 sharding:
-   clusterRole: "configsvr"
+    clusterRole: "configsvr"
 storage:
-   dbPath: "${data_dir}"
+    dbPath: "${data_dir}"
 net:
-   port: ${port}
+    port: ${port}
 systemLog:
     destination: file
     path: "${log_dir}/config.log"

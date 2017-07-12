@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.neusoft.realsight.csd</groupId>
-	<artifactId>ci-meta</artifactId>
-	<version>3.0.15-1.0.2</version>
+	<artifactId>mongodb</artifactId>
+	<version>3.0.15-1.0.0</version>
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
