@@ -10,6 +10,7 @@ for line in file:
 	host=line.split(":")[0]
 	port=line.split(":")[1].split("=")[1]
 	nodes.append("%s:%s"%(host,port))
+file.close()
 mongodbDir=os.getenv('MONGODB_DIRNAME')
 primary=nodes[0]
 print("will use %s as primary"%(primary))
