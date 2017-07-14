@@ -1,0 +1,564 @@
+{
+  "name": "MONGODB_BASIC",
+  "label": "jdt mongodb(基本版)",
+  "description": "由贾大神提供的基本版mongodb集群,最多支持3个shard",
+  "version": "3.0.15-1.0.0",
+  "runAs": {
+    "user": "mongodb",
+    "group": "mongodb"
+  },
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "mongodb"
+    ]
+  },
+  "commands": [
+    {
+      "name": "initiateShard",
+      "label": "初始化分片",
+      "description": "初始化分片",
+      "roleName": "MONGOS",
+      "roleCommand": "initiateShard",
+      "runMode": "single"
+    },
+    {
+      "name": "showShardStatus",
+      "label": "显示分片状态",
+      "description": "显示分片状态",
+      "roleName": "MONGOS",
+      "roleCommand": "showShardStatus",
+      "runMode": "single"
+    }
+  ],
+  "roles": [
+    {
+      "name": "CONFIG_SERVER",
+      "label": "config server",
+      "pluralLabel": "config server",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/configServer.sh",
+        "environmentVariables": {
+          "data_dir": "${config_data_dir}",
+          "log_dir": "${log_dir}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "3",
+        "maxInstances": "3"
+      },
+      "parameters": [
+        {
+          "name": "config_data_dir",
+          "label": "Config server存放数据的文件夹",
+          "description": "Config server存放数据的文件夹",
+          "type": "path",
+          "default": "/var/lib/mongodb/config",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 30001,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SHARD1_MONGOD",
+      "label": "分片1工作节点",
+      "pluralLabel": "分片1工作节点",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/mongod.sh",
+        "args": [
+          "s1"
+        ],
+        "environmentVariables": {
+          "data_dir": "${shard1_mongod_data_dir}",
+          "log_dir": "${log_dir}",
+          "cacheSizeGB": "${cacheSizeGB}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "0",
+        "placementRules": [
+          {
+            "type": "neverWith",
+            "roleTypes": [
+              "SHARD1_ARBITER"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "shard1_mongod_data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/s1",
+          "pathType": "localDataDir",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "cacheSizeGB",
+          "label": "wiredTiger cacheSizeGB",
+          "description": "wiredTiger的cacheSizeGB,如果设置为0则由mongodb自动计算,手动设置时请不要超过可用内存的一半",
+          "type": "long",
+          "min": 0,
+          "default": 0,
+          "unit": "gigabytes",
+          "required": false
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31001,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SHARD1_ARBITER",
+      "label": "分片1仲裁者",
+      "pluralLabel": "分片1仲裁者",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/arbiter.sh",
+        "args": [
+          "s1"
+        ],
+        "environmentVariables": {
+          "data_dir": "${shard1_arbiter_data_dir}",
+          "log_dir": "${log_dir}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "0",
+        "placementRules": [
+          {
+            "type": "neverWith",
+            "roleTypes": [
+              "SHARD1_MONGOD"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "shard1_arbiter_data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/s1",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31001,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SHARD2_MONGOD",
+      "label": "分片2工作节点",
+      "pluralLabel": "分片2工作节点",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/mongod.sh",
+        "args": [
+          "s2"
+        ],
+        "environmentVariables": {
+          "data_dir": "${shard2_mongod_data_dir}",
+          "log_dir": "${log_dir}",
+          "cacheSizeGB": "${cacheSizeGB}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "0",
+        "placementRules": [
+          {
+            "type": "neverWith",
+            "roleTypes": [
+              "SHARD2_ARBITER"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "shard2_mongod_data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/s2",
+          "pathType": "localDataDir",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "cacheSizeGB",
+          "label": "wiredTiger cacheSizeGB",
+          "description": "wiredTiger的cacheSizeGB,如果设置为0则由mongodb自动计算,手动设置时请不要超过可用内存的一半",
+          "type": "long",
+          "min": 0,
+          "default": 0,
+          "unit": "gigabytes",
+          "required": false
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31002,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SHARD2_ARBITER",
+      "label": "分片2仲裁者",
+      "pluralLabel": "分片2仲裁者",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/arbiter.sh",
+        "args": [
+          "s2"
+        ],
+        "environmentVariables": {
+          "data_dir": "${shard2_arbiter_data_dir}",
+          "log_dir": "${log_dir}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "0",
+        "placementRules": [
+          {
+            "type": "neverWith",
+            "roleTypes": [
+              "SHARD2_MONGOD"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "shard2_arbiter_data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/s2",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31002,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SHARD3_MONGOD",
+      "label": "分片3工作节点",
+      "pluralLabel": "分片3工作节点",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/mongod.sh",
+        "args": [
+          "s3"
+        ],
+        "environmentVariables": {
+          "data_dir": "${shard3_mongod_data_dir}",
+          "log_dir": "${log_dir}",
+          "cacheSizeGB": "${cacheSizeGB}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "0",
+        "placementRules": [
+          {
+            "type": "neverWith",
+            "roleTypes": [
+              "SHARD3_ARBITER"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "shard3_mongod_data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/s3",
+          "pathType": "localDataDir",
+          "configurableInWizard": true,
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "cacheSizeGB",
+          "label": "wiredTiger cacheSizeGB",
+          "description": "wiredTiger的cacheSizeGB,如果设置为0则由mongodb自动计算,手动设置时请不要超过可用内存的一半",
+          "type": "long",
+          "min": 0,
+          "default": 0,
+          "unit": "gigabytes",
+          "required": false
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31003,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SHARD3_ARBITER",
+      "label": "分片3仲裁者",
+      "pluralLabel": "分片3仲裁者",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/arbiter.sh",
+        "args": [
+          "s3"
+        ],
+        "environmentVariables": {
+          "data_dir": "${shard3_arbiter_data_dir}",
+          "log_dir": "${log_dir}",
+          "port": "${port}"
+        }
+      },
+      "topology": {
+        "minInstances": "0",
+        "placementRules": [
+          {
+            "type": "neverWith",
+            "roleTypes": [
+              "SHARD3_MONGOD"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "shard3_arbiter_data_dir",
+          "label": "data dir",
+          "description": "data dir",
+          "type": "path",
+          "default": "/var/lib/mongodb/s3",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 31003,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "MONGOS",
+      "label": "mongos",
+      "pluralLabel": "mongos",
+      "jvmBased": false,
+      "startRunner": {
+        "program": "scripts/mongos.sh",
+        "environmentVariables": {
+          "log_dir": "${log_dir}",
+          "port": "${port}"
+        }
+      },
+      "configWriter": {
+        "peerConfigGenerators": [
+          {
+            "filename": "shard1_mongod.properties",
+            "params": [
+              "port"
+            ],
+            "roleName": "SHARD1_MONGOD"
+          },
+          {
+            "filename": "shard1_arbiter.properties",
+            "params": [
+              "port"
+            ],
+            "roleName": "SHARD1_ARBITER"
+          },
+          {
+            "filename": "shard2_mongod.properties",
+            "params": [
+              "port"
+            ],
+            "roleName": "SHARD2_MONGOD"
+          },
+          {
+            "filename": "shard2_arbiter.properties",
+            "params": [
+              "port"
+            ],
+            "roleName": "SHARD2_ARBITER"
+          },
+          {
+            "filename": "shard3_mongod.properties",
+            "params": [
+              "port"
+            ],
+            "roleName": "SHARD3_MONGOD"
+          },
+          {
+            "filename": "shard3_arbiter.properties",
+            "params": [
+              "port"
+            ],
+            "roleName": "SHARD3_ARBITER"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "log_dir",
+          "label": "log dir",
+          "description": "log dir",
+          "type": "path",
+          "default": "/var/log/mongodb",
+          "pathType": "localDataDir",
+          "required": true
+        },
+        {
+          "name": "port",
+          "label": "port",
+          "description": "port",
+          "type": "port",
+          "default": 30000,
+          "required": true
+        }
+      ],
+      "topology": {
+        "minInstances": "0"
+      },
+      "commands": [
+        {
+          "name": "initiateShard",
+          "label": "初始化分片",
+          "description": "初始化分片",
+          "expectedExitCodes": [
+            0
+          ],
+          "requiredRoleState": "running",
+          "commandRunner": {
+            "program": "scripts/init.py"
+          }
+        },
+        {
+          "name": "showShardStatus",
+          "label": "显示分片状态",
+          "description": "显示分片状态",
+          "expectedExitCodes": [
+            0
+          ],
+          "requiredRoleState": "running",
+          "commandRunner": {
+            "program": "scripts/show.sh",
+            "args": [
+              "${port}"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
