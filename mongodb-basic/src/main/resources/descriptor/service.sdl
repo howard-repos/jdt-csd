@@ -475,6 +475,13 @@
       "configWriter": {
         "peerConfigGenerators": [
           {
+            "filename": "configServer.properties",
+            "params": [
+              "port"
+            ],
+            "roleName": "CONFIG_SERVER"
+          },
+          {
             "filename": "shard1_mongod.properties",
             "params": [
               "port"
