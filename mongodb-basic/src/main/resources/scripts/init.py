@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import subprocess
+import sys
 
 def readFromFile(list,file):
 	file = open(file)
@@ -11,6 +12,8 @@ def readFromFile(list,file):
 		list.append("%s:%s"%(host,port))
 
 def initReplicaSet(replicaSetName,mongdNodes,arbiterNodes):
+	if len(mongdNodes)==0:
+		return
 	primary=mongdNodes[0]
 	print("will use %s as primary in %s"%(primary,replicaSetName))
 	subprocess.check_call('''mongo %s --eval "printjson(rs.initiate())"'''%(primary),shell=True)
@@ -56,8 +59,13 @@ initReplicaSet("s1",shard1MongdNodes,shard1ArbiterNodes)
 initReplicaSet("s2",shard2MongdNodes,shard2ArbiterNodes)
 initReplicaSet("s3",shard3MongdNodes,shard3ArbiterNodes)
 
-primary=nodes[0]
-print("will use %s as primary"%(primary))
-subprocess.check_call('''%s/bin/mongo %s --eval "printjson(rs.initiate())"'''%(mongodbDir,primary),shell=True)
-subprocess.check_call('''%s/bin/mongo %s --eval 'rs.add("%s")' '''%(mongodbDir,primary,nodes[1]),shell=True)
-subprocess.check_call('''%s/bin/mongo %s --eval 'rs.add("%s")' '''%(mongodbDir,primary,nodes[2]),shell=True)
+port=sys.argv[1]
+
+if len(shard1MongdNodes)>0:
+	subprocess.check_call('''mongo localhost:%s --eval 'printjson(sh.addShard("s1/%s"))' '''%(port,shard1MongdNodes[0]),shell=True)
+
+if len(shard2MongdNodes)>0:	
+	subprocess.check_call('''mongo localhost:%s --eval 'printjson(sh.addShard("s2/%s"))' '''%(port,shard2MongdNodes[0]),shell=True)
+
+if len(shard3MongdNodes)>0:
+	subprocess.check_call('''mongo localhost:%s --eval 'printjson(sh.addShard("s3/%s"))' '''%(port,shard3MongdNodes[0]),shell=True)

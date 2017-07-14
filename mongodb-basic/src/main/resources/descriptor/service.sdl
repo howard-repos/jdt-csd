@@ -13,6 +13,16 @@
       "mongodb"
     ]
   },
+  "serviceInit": {
+    "postStartSteps": [
+      {
+        "commandName": "initiateShard"
+      },
+      {
+        "commandName": "showShardStatus"
+      }
+    ]
+  },
   "commands": [
     {
       "name": "initiateShard",
@@ -540,7 +550,10 @@
           ],
           "requiredRoleState": "running",
           "commandRunner": {
-            "program": "scripts/init.py"
+            "program": "scripts/init.py",
+            "args": [
+              "${port}"
+            ]
           }
         },
         {
