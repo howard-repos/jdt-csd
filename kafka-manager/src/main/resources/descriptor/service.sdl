@@ -42,7 +42,7 @@
   "roles": [
     {
       "name": "KAFKA_MANAGER",
-      "label": "kafka manager",
+      "label": "Kafka Manager",
       "pluralLabel": "kafka manager",
       "jvmBased": true,
       "startRunner": {

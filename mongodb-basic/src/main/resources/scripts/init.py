@@ -2,6 +2,7 @@
 import os
 import subprocess
 import sys
+import time
 
 def readFromFile(list,file):
 	file = open(file)
@@ -60,12 +61,15 @@ initReplicaSet("s2",shard2MongdNodes,shard2ArbiterNodes)
 initReplicaSet("s3",shard3MongdNodes,shard3ArbiterNodes)
 
 port=sys.argv[1]
-
+time.sleep(5)
 if len(shard1MongdNodes)>0:
+	time.sleep(1)
 	subprocess.check_call('''mongo localhost:%s --eval 'printjson(sh.addShard("s1/%s"))' '''%(port,shard1MongdNodes[0]),shell=True)
-
+	
 if len(shard2MongdNodes)>0:	
+	time.sleep(1)
 	subprocess.check_call('''mongo localhost:%s --eval 'printjson(sh.addShard("s2/%s"))' '''%(port,shard2MongdNodes[0]),shell=True)
 
 if len(shard3MongdNodes)>0:
+	time.sleep(1)
 	subprocess.check_call('''mongo localhost:%s --eval 'printjson(sh.addShard("s3/%s"))' '''%(port,shard3MongdNodes[0]),shell=True)

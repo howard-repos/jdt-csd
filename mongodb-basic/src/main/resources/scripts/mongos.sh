@@ -32,6 +32,6 @@ EOF
 
 
 # wait config server to start
-sleep 2
+sleep 5
 
 exec numactl --interleave=all $MONGODB_DIRNAME/bin/mongos -f mongos.conf

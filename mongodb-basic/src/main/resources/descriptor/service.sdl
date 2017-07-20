@@ -44,7 +44,7 @@
   "roles": [
     {
       "name": "CONFIG_SERVER",
-      "label": "config server",
+      "label": "Config Server",
       "pluralLabel": "config server",
       "jvmBased": false,
       "startRunner": {
@@ -90,7 +90,7 @@
     },
     {
       "name": "SHARD1_MONGOD",
-      "label": "分片1工作节点",
+      "label": "分片1Worker",
       "pluralLabel": "分片1工作节点",
       "jvmBased": false,
       "startRunner": {
@@ -158,7 +158,7 @@
     },
     {
       "name": "SHARD1_ARBITER",
-      "label": "分片1仲裁者",
+      "label": "分片1Arbiter",
       "pluralLabel": "分片1仲裁者",
       "jvmBased": false,
       "startRunner": {
@@ -214,7 +214,7 @@
     },
     {
       "name": "SHARD2_MONGOD",
-      "label": "分片2工作节点",
+      "label": "分片2Worker",
       "pluralLabel": "分片2工作节点",
       "jvmBased": false,
       "startRunner": {
@@ -282,7 +282,7 @@
     },
     {
       "name": "SHARD2_ARBITER",
-      "label": "分片2仲裁者",
+      "label": "分片2Arbiter",
       "pluralLabel": "分片2仲裁者",
       "jvmBased": false,
       "startRunner": {
@@ -338,7 +338,7 @@
     },
     {
       "name": "SHARD3_MONGOD",
-      "label": "分片3工作节点",
+      "label": "分片3Worker",
       "pluralLabel": "分片3工作节点",
       "jvmBased": false,
       "startRunner": {
@@ -406,7 +406,7 @@
     },
     {
       "name": "SHARD3_ARBITER",
-      "label": "分片3仲裁者",
+      "label": "分片3Arbiter",
       "pluralLabel": "分片3仲裁者",
       "jvmBased": false,
       "startRunner": {
@@ -462,7 +462,7 @@
     },
     {
       "name": "MONGOS",
-      "label": "mongos",
+      "label": "Mongos",
       "pluralLabel": "mongos",
       "jvmBased": false,
       "startRunner": {

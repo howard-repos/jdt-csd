@@ -36,7 +36,7 @@
   "roles": [
     {
       "name": "STORM_SUPERVISOR",
-      "label": "storm supervisor",
+      "label": "SuperVisor",
       "pluralLabel": "storm supervisors",
       "jvmBased": true,
       "startRunner": {
@@ -73,7 +73,7 @@
     },
     {
       "name": "STORM_LOGVIEWER",
-      "label": "storm log viewer",
+      "label": "Log Viewer",
       "pluralLabel": "storm viewers",
       "jvmBased": true,
       "startRunner": {
@@ -107,7 +107,7 @@
     },
     {
       "name": "STORM_UI",
-      "label": "storm ui",
+      "label": "Storm UI",
       "pluralLabel": "storm ui",
       "jvmBased": true,
       "startRunner": {
@@ -161,7 +161,7 @@
     },
     {
       "name": "STORM_NIMBUS",
-      "label": "storm nimbus",
+      "label": "Storm Nimbus",
       "pluralLabel": "storm nimbus",
       "jvmBased": true,
       "startRunner": {
