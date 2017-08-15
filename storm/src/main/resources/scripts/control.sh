@@ -6,6 +6,7 @@ export STORM_CONF_DIR=$CONF_DIR
 
 echo 'storm.local.dir: "/var/lib/storm"' >> storm.yaml
 echo 'worker.childopts: "-Xmx1024m -XX:-UseGCOverheadLimit -XX:-PrintGCDetails"' >> storm.yaml
+echo "topology.max.spout.pending: $topology_max_spout_pending" >> storm.yaml
 
 # zk
 echo "storm.zookeeper.servers:" >> storm.yaml
