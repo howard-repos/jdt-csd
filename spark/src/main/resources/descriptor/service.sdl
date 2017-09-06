@@ -1,0 +1,100 @@
+{
+  "name": "JDT_SPARK",
+  "label": "jdt spark",
+  "description": "由贾大神提供的的spark",
+  "version": "2.1.1-1.0.0",
+  "runAs": {
+    "user": "jdt-spark",
+    "group": "jdt-spark"
+  },
+  "icon": "images/icon.png",
+  "parcel": {
+    "requiredTags": [
+      "jdt-spark"
+    ]
+  },
+  "serviceDependencies": [
+    {
+      "name": "YARN",
+      "required": "true"
+    }
+  ],
+  "rolesWithExternalLinks": [
+    "HISTORY_SERVER"
+  ],
+  "serviceInit": {
+    "preStartSteps": [
+      {
+        "commandName": "CreateSparkJarDirCommand"
+      },
+      {
+        "commandName": "CreateSparkHistoryDirCommand"
+      },
+      {
+        "commandName": "uploadSparkJars"
+      }
+    ]
+  },
+  "hdfsDirs": [
+    {
+      "name": "CreateSparkJarDirCommand",
+      "label": "Create Spark Jar Dir",
+      "description": "Create Spark Jar Dir",
+      "directoryDescription": "Spark Jar Dir",
+      "path": "/sparkJars",
+      "permissions": "0755"
+    },
+    {
+      "name": "CreateSparkHistoryDirCommand",
+      "label": "Create Spark History Dir",
+      "description": "Create Spark History Dir",
+      "directoryDescription": "Spark History Dir",
+      "path": "/sparkHistory",
+      "permissions": "0777"
+    }
+  ],
+  "commands": [
+    {
+      "name": "uploadSparkJars",
+      "label": "Upload Spark Jars",
+      "description": "Upload Spark Jars",
+      "roleCommand": "uploadSparkJars",
+      "roleName": "HISTORY_SERVER",
+      "runMode": "single"
+    }
+  ],
+  "roles": [
+    {
+      "name": "HISTORY_SERVER",
+      "label": "History Server",
+      "pluralLabel": "history server",
+      "jvmBased": true,
+      "startRunner": {
+        "program": "scripts/history-server.sh"
+      },
+      "topology": {
+        "minInstances": "1",
+        "maxInstances": "1"
+      },
+      "externalLink": {
+        "name": "history server",
+        "label": "history server",
+        "url": "http://${host}:18080"
+      },
+      "commands": [
+        {
+          "name": "uploadSparkJars",
+          "label": "上传spark jar文件",
+          "description": "上传spark jar文件",
+          "expectedExitCodes": [
+            0
+          ],
+          "requiredRoleState": "stopped",
+          "commandRunner": {
+            "program": "scripts/uploadSparkJars.sh"
+          }
+        }
+      ]
+    }
+  ]
+}

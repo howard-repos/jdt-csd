@@ -2,7 +2,7 @@
   "name": "JDT_KAFKA",
   "label": "jdt kafka",
   "description": "由贾大神提供的kafka",
-  "version": "1.2.7-1.0.0",
+  "version": "0.8.2.1-1.0.0",
   "runAs": {
     "user": "kafka",
     "group": "kafka"
@@ -115,5 +115,26 @@
         ]
       }
     }
-  ]
+  ],
+  "gateway": {
+    "alternatives": {
+      "name": "kafka-conf",
+      "priority": 50,
+      "linkRoot": "/etc/jdt-kafka"
+    },
+    "scriptRunner": {
+      "program": "scripts/gateway.sh"
+    },
+    "configWriter": {
+      "peerConfigGenerators": [
+        {
+          "filename": "kafka-conf/client.properties",
+          "params": [
+            "zookeeper.chroot"
+          ],
+          "roleName": "KAFKA_BROKER"
+        }
+      ]
+    }
+  }
 }
