@@ -14,6 +14,7 @@ log.segment.bytes=1073741824
 log.retention.check.interval.ms=300000
 log.cleaner.enable=false
 zookeeper.connection.timeout.ms=6000
+auto.create.topics.enable=false
 EOF
 
 cat kafkaConfig.properties >> server.properties
